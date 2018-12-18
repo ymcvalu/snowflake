@@ -95,7 +95,7 @@ func NewNode(node int64) (*Node, error) {
 	stepMask = -1 ^ (-1 << StepBits)
 	timeShift = NodeBits + StepBits
 	nodeShift = StepBits
-	
+
 	if node < 0 || node > nodeMax {
 		return nil, errors.New("Node number must be between 0 and " + strconv.FormatInt(nodeMax, 10))
 	}
@@ -145,6 +145,21 @@ func (f ID) Int64() int64 {
 // String returns a string of the snowflake ID
 func (f ID) String() string {
 	return strconv.FormatInt(int64(f), 10)
+}
+
+var hexTable = []byte{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'}
+
+func (f ID) String16() string {
+	ff := uint64(f)
+	var s uint = 60
+	buf := make([]byte, 0, 16)
+	for s > 0 {
+		n := ff >> s
+		buf = append(buf, hexTable[n&0x0f])
+		s -= 4
+	}
+	buf = append(buf, hexTable[ff&0x0f])
+	return string(buf)
 }
 
 // Base2 returns a string base2 of the snowflake ID

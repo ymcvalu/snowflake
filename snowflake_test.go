@@ -70,6 +70,12 @@ func TestBase32(t *testing.T) {
 	}
 }
 
+func TestString16(t *testing.T){
+	node,_ :=NewNode(1)
+	id :=node.Generate()
+	t.Log(id.String16())
+}
+
 func BenchmarkParseBase32(b *testing.B) {
 
 	node, _ := NewNode(1)
